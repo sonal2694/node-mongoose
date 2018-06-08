@@ -9,24 +9,23 @@ const connect = mongoose.connect(url, {});
 connect.then(() => {
   console.log("Connected correctly to server.\n");
   const db = mongoose.connection;
-  var newDish = Dishes({
+
+  Dishes.create({
     name: 'Uthappizza',
     description: 'test'
+  })
+  .then((dish) => {
+    console.log(dish);
+    return Dishes.find({}).exec();
+  })
+  .then((dishes) => {
+    console.log(dishes);
+    return db.collections['dishes'].drop();
+  })
+  .then(() => {
+    return db.close();
+  })
+  .catch((err) => {
+    console.log(err);
   });
-
-  newDish.save()
-    .then((dish) => {
-      console.log(dish);
-      return Dishes.find({}).exec();
-    })
-    .then((dishes) => {
-      console.log(dishes);
-      return db.collections['dishes'].drop();
-    })
-    .then(() => {
-      return db.close();
-    })
-    .catch((err) => {
-      console.log(err);
-    });
 });
